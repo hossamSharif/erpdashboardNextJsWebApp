@@ -7,6 +7,7 @@ import {
   SHOP_ERRORS
 } from '@multi-shop/shared';
 import { AccountGenerationService } from './account-generation.service';
+import { CategoryHierarchyService } from './category-hierarchy.service';
 
 const prisma = new PrismaClient();
 
@@ -84,6 +85,10 @@ export class ShopService {
 
     // Create default accounts for the shop
     await AccountGenerationService.createDefaultAccountsForShop(shop.id, shop.code);
+
+    // Create default expense categories for the shop
+    const categoryHierarchyService = new CategoryHierarchyService(prisma);
+    await categoryHierarchyService.createDefaultCategories(shop.id);
 
     return shop;
   }
