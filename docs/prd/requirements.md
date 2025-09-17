@@ -1,0 +1,107 @@
+# Requirements
+
+## Functional
+
+- FR1: The system shall support multi-tenant architecture allowing single admin to manage multiple spare parts shops with complete data isolation (each shop's data is completely segregated from other shops)
+- FR2: The system shall calculate profit using the formula: Profit = (Ending Stock Value - Opening Stock Value) + Sales Revenue - Purchase Costs - Operating Expenses
+- FR3: The system shall enable users to enter daily financial transactions including sales totals, purchase totals, and expenses without requiring item-level details
+- FR4: The system shall maintain hierarchical account structure with bilingual names (Arabic and English) for all accounts and sub-accounts
+- FR5: The system shall support offline operation with automatic synchronization when network connectivity is restored
+- FR6: The system shall implement role-based access control with distinct Admin (shop owner) and User (shop worker) interfaces
+- FR7: The system shall track partial payments for customer and supplier accounts with outstanding balance management
+- FR8: The system shall generate automated daily financial reports with configurable notification schedules
+- FR9: The system shall support multi-currency display with admin-managed daily exchange rates while storing all amounts in base currency (SDG)
+- FR10: The system shall allow internal transfers between cash and bank accounts with balance reconciliation
+- FR11: The system shall maintain opening and ending stock values as monetary amounts (not physical inventory) for profit calculations
+- FR12: The system shall provide real-time financial dashboard showing cash balance, bank balance, and current stock values
+- FR13: The system shall enforce daily financial report submission with escalation notifications for missing reports
+- FR14: The system shall preserve audit trail for all financial transactions including modifications and user actions
+- FR15: The system shall support financial year management with historical data preservation
+- FR16: The system shall log all synchronization operations (manual and automatic) with timestamp, user ID, sync status, data volume, and duration
+- FR17: The system shall provide admin interface to view detailed sync history including success/failure status, conflict resolutions, and affected records
+- FR18: The system shall send daily notifications to users with pending unsynchronized local data prompting them to perform manual sync
+- FR19: The system shall display visual indicators showing count of pending local transactions awaiting synchronization
+- FR20: The system shall escalate sync alerts to admin if user has unsynchronized data older than 24 hours
+- FR21: The system shall require mandatory synchronization every 24 hours when local transactions exist
+- FR22: The system shall prevent new transaction entry if last sync was more than 24 hours ago and pending transactions exist
+- FR23: The system shall automatically append shop name as suffix to all shop-specific sub-accounts (e.g., "Sales-Downtown", "المبيعات-وسط المدينة")
+- FR24: The system shall default to Arabic language and RTL layout on first launch, with option to switch to English/LTR
+- FR25: The system shall support right-to-left (RTL) layout when Arabic language is selected
+- FR26: The system shall categorize expense sub-accounts for filtering, sorting, and analytics reporting (e.g., salaries, breakfast, utilities)
+- FR27: The system shall track partial payments with separate fields for "amount paid" and "change" on invoices
+- FR28: The system shall maintain user activity logs including entry actions (add/modify/delete), login/logout, sync operations, and profile changes
+- FR29: The system shall generate and export daily reports in shareable formats (PDF, Excel) for email and WhatsApp sharing
+- FR30: The system shall display real-time cash-in-hand and bank balance in the top status bar of daily entries page
+- FR31: The system shall group daily entries by date with expandable/collapsible views in the records page
+- FR32: The system shall provide animated navigation between daily entry pages with smooth transitions
+- FR33: The system shall restrict sub-account creation permissions (users cannot create sub-accounts under sales, purchase, cash, bank, or stock accounts)
+- FR34: The system shall allow admin to set notification timing preferences for missing daily entries
+- FR35: The system shall track and display sync history including last sync time, data volume, and success/failure status
+- FR36: The system shall provide visual account hierarchy viewer for admins to see all account relationships
+- FR37: The system shall generate formal Profit & Loss statements per shop and consolidated
+- FR38: The system shall allow bulk selection of entries for batch operations (delete, export)
+- FR39: The system shall provide in-app help and tutorial system for user guidance
+- FR40: The system shall display quick stats widget showing daily totals (sales, purchases, expenses)
+- FR41: The system shall show clickable balance details revealing transaction history
+- FR42: The system shall provide password reset flow via email verification
+- FR43: The system shall support optional two-factor authentication for enhanced security
+- FR44: The system shall allow bulk operations on multiple shops simultaneously for admin
+- FR45: The system shall track and display currency rate history with change notifications
+- FR46: The system shall provide comparative analytics allowing shop-to-shop comparison
+- FR47: The system shall support data import/export operations for migration
+- FR48: The system shall provide backup and restore functionality for data protection
+- FR49: The system shall display version update notifications with changelog
+- FR50: The system shall provide receipt/invoice preview before sharing via email/WhatsApp
+- FR51: The system shall support Arabic-Indic numerals (٠١٢٣٤٥٦٧٨٩) with option to switch to Western numerals
+- FR52: The system shall display all system messages, errors, and notifications in user's selected language
+- FR53: The system shall support both Hijri and Gregorian calendar systems with Arabic month/day names
+- FR54: The system shall format all currency displays according to Arabic conventions (right-aligned with Arabic currency names)
+- FR55: The system shall reverse all navigation gestures and animations when in RTL mode
+- FR56: The system shall provide Arabic keyboard as default input method for Arabic interface
+- FR57: The system shall display bilingual tooltips with Arabic as primary language
+- FR58: The system shall generate reports in Arabic by default with option for English
+
+## Non Functional
+
+- NFR1: The mobile application shall launch in less than 3 seconds on devices with minimum 2GB RAM
+- NFR2: Financial transaction entry shall complete within 1 second for optimal user experience
+- NFR3: The system shall support 100+ concurrent active users without performance degradation
+- NFR4: Daily data synchronization shall complete within 30 seconds for typical shop operations
+- NFR5: The application shall function fully offline for up to 30 days with local storage of transaction history
+- NFR6: The system shall handle 10,000+ financial transactions per day across all shops
+- NFR7: All API communications shall use TLS 1.3 encryption with AES-256 encryption for data at rest
+- NFR8: The system shall maintain 99.9% uptime availability for production environment
+- NFR9: The system shall enforce mandatory sync within 24 hours of first unsynchronized transaction
+- NFR10: Monthly financial reports shall generate within 10 seconds for performance optimization
+- NFR11: The system shall implement automatic conflict resolution using last-write-wins strategy with audit trail
+- NFR12: Mobile application shall minimize battery consumption through optimized background processing
+- NFR13: The system shall support responsive design from 320px mobile to 1024px+ desktop viewports
+- NFR14: User authentication tokens shall expire after 8 hours of inactivity for security
+- NFR15: The system shall implement rate limiting on API endpoints to prevent abuse
+- NFR16: The system shall persist sync logs for minimum 90 days for audit and troubleshooting purposes
+- NFR17: Sync status notifications shall appear within 5 seconds of detecting unsynchronized local data
+- NFR18: The system shall attempt automatic sync every 4 hours when network is available and transactions are pending
+- NFR19: The system shall support full Unicode with proper Arabic text shaping and ligatures
+- NFR20: Account name searches shall work with both Arabic and English names regardless of selected interface language
+- NFR21: The system shall provide smooth page transition animations completed within 300ms
+- NFR22: The export functionality shall generate reports within 3 seconds for daily data
+- NFR23: The notification badge shall update in real-time when new notifications arrive
+- NFR24: The side menu shall toggle with smooth animation in less than 200ms
+- NFR25: Search and filter operations shall return results within 1 second for up to 10,000 records
+- NFR26: The help system shall load within 2 seconds with offline content caching
+- NFR27: Bulk operations shall process up to 100 items within 5 seconds
+- NFR28: The account hierarchy viewer shall render up to 500 accounts without lag
+- NFR29: P&L statement generation shall complete within 5 seconds per shop
+- NFR30: Password reset email shall be sent within 30 seconds of request
+- NFR31: Two-factor authentication codes shall be valid for 5 minutes
+- NFR32: Comparative analytics shall load within 3 seconds for up to 10 shops
+- NFR33: Data export shall handle up to 50,000 records in a single operation
+- NFR34: Backup operations shall complete within 60 seconds for typical data volumes
+- NFR35: Theme switching shall apply instantly without page reload
+- NFR36: The system shall render Arabic fonts with appropriate size and weight for optimal readability
+- NFR37: The RTL/LTR layout switch shall complete within 100ms without content jumping
+- NFR38: The system shall properly mirror all icons and graphics for RTL layout
+- NFR39: The system shall support Arabic text search with diacritics-insensitive matching
+- NFR40: The system shall handle mixed RTL/LTR content (Arabic with English numbers/names) correctly
+
+---

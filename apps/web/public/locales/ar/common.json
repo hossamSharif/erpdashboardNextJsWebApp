@@ -1,0 +1,83 @@
+{
+  "buttons": {
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "edit": "تحرير",
+    "add": "إضافة",
+    "close": "إغلاق",
+    "submit": "إرسال",
+    "back": "رجوع",
+    "next": "التالي",
+    "previous": "السابق",
+    "confirm": "تأكيد",
+    "view": "عرض",
+    "search": "بحث",
+    "filter": "تصفية",
+    "export": "تصدير",
+    "import": "استيراد",
+    "print": "طباعة"
+  },
+  "labels": {
+    "name": "الاسم",
+    "description": "الوصف",
+    "status": "الحالة",
+    "date": "التاريخ",
+    "time": "الوقت",
+    "amount": "المبلغ",
+    "quantity": "الكمية",
+    "price": "السعر",
+    "total": "المجموع",
+    "notes": "ملاحظات",
+    "category": "الفئة",
+    "type": "النوع",
+    "code": "الرمز",
+    "reference": "المرجع"
+  },
+  "messages": {
+    "success": "تم بنجاح",
+    "error": "حدث خطأ",
+    "warning": "تحذير",
+    "info": "معلومات",
+    "loading": "جاري التحميل...",
+    "noData": "لا توجد بيانات",
+    "confirmDelete": "هل أنت متأكد من الحذف؟",
+    "unsavedChanges": "توجد تغييرات غير محفوظة",
+    "required": "هذا الحقل مطلوب",
+    "invalidFormat": "تنسيق غير صحيح"
+  },
+  "status": {
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "pending": "في الانتظار",
+    "completed": "مكتمل",
+    "cancelled": "ملغي",
+    "draft": "مسودة"
+  },
+  "time": {
+    "today": "اليوم",
+    "yesterday": "أمس",
+    "tomorrow": "غداً",
+    "thisWeek": "هذا الأسبوع",
+    "thisMonth": "هذا الشهر",
+    "thisYear": "هذه السنة"
+  },
+  "health": {
+    "systemOperational": "النظام يعمل",
+    "systemStatus": "حالة النظام",
+    "database": "قاعدة البيانات",
+    "authentication": "نظام المصادقة",
+    "responseTime": "وقت الاستجابة",
+    "version": "الإصدار",
+    "environment": "البيئة",
+    "healthy": "سليم",
+    "unhealthy": "غير سليم",
+    "connected": "متصل",
+    "disconnected": "منقطع",
+    "operational": "يعمل",
+    "ms": "مللي ثانية",
+    "checkingStatus": "جاري فحص الحالة...",
+    "lastChecked": "آخر فحص",
+    "refreshStatus": "تحديث الحالة"
+  }
+}

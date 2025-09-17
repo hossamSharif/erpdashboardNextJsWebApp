@@ -1,0 +1,24 @@
+schema: 1
+story: '2.4'
+gate: CONCERNS
+status_reason: 'Missing audit history endpoint and some test coverage gaps pose medium-risk issues.'
+reviewer: 'Quinn'
+updated: '2025-09-17T10:15:00Z'
+top_issues:
+  - id: 'API-001'
+    severity: medium
+    finding: 'Stock value history endpoint not implemented'
+    suggested_action: 'Complete stockValueHistory tRPC endpoint referenced in component'
+  - id: 'TEST-001'
+    severity: medium
+    finding: 'Missing Decimal import in test mocks causing potential test failures'
+    suggested_action: 'Add proper Decimal import in stockValue.test.ts'
+  - id: 'REQ-001'
+    severity: low
+    finding: 'Stock value history display shows placeholder instead of actual data'
+    suggested_action: 'Implement history query and display in StockValueHistoryDialog'
+  - id: 'TEST-002'
+    severity: low
+    finding: 'E2E tests only show partial implementation with mocked data'
+    suggested_action: 'Complete E2E test implementation with real data flows'
+waiver: { active: false }

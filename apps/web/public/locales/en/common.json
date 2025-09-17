@@ -1,0 +1,83 @@
+{
+  "buttons": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "close": "Close",
+    "submit": "Submit",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "confirm": "Confirm",
+    "view": "View",
+    "search": "Search",
+    "filter": "Filter",
+    "export": "Export",
+    "import": "Import",
+    "print": "Print"
+  },
+  "labels": {
+    "name": "Name",
+    "description": "Description",
+    "status": "Status",
+    "date": "Date",
+    "time": "Time",
+    "amount": "Amount",
+    "quantity": "Quantity",
+    "price": "Price",
+    "total": "Total",
+    "notes": "Notes",
+    "category": "Category",
+    "type": "Type",
+    "code": "Code",
+    "reference": "Reference"
+  },
+  "messages": {
+    "success": "Success",
+    "error": "Error occurred",
+    "warning": "Warning",
+    "info": "Information",
+    "loading": "Loading...",
+    "noData": "No data available",
+    "confirmDelete": "Are you sure you want to delete?",
+    "unsavedChanges": "You have unsaved changes",
+    "required": "This field is required",
+    "invalidFormat": "Invalid format"
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "pending": "Pending",
+    "completed": "Completed",
+    "cancelled": "Cancelled",
+    "draft": "Draft"
+  },
+  "time": {
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "tomorrow": "Tomorrow",
+    "thisWeek": "This Week",
+    "thisMonth": "This Month",
+    "thisYear": "This Year"
+  },
+  "health": {
+    "systemOperational": "System Operational",
+    "systemStatus": "System Status",
+    "database": "Database",
+    "authentication": "Authentication",
+    "responseTime": "Response Time",
+    "version": "Version",
+    "environment": "Environment",
+    "healthy": "Healthy",
+    "unhealthy": "Unhealthy",
+    "connected": "Connected",
+    "disconnected": "Disconnected",
+    "operational": "Operational",
+    "ms": "ms",
+    "checkingStatus": "Checking status...",
+    "lastChecked": "Last checked",
+    "refreshStatus": "Refresh Status"
+  }
+}

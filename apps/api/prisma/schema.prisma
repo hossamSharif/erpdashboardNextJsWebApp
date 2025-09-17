@@ -1,0 +1,426 @@
+// Prisma schema for Multi-Shop Accounting ERP System
+// Story 1.2: Database Schema & Multi-tenant Setup
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema", "views"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ============================================================================
+// ENUMS
+// ============================================================================
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+enum AccountType {
+  ASSET
+  LIABILITY
+  EQUITY
+  REVENUE
+  EXPENSE
+}
+
+enum TransactionType {
+  SALE
+  PURCHASE
+  PAYMENT
+  RECEIPT
+  ADJUSTMENT
+  TRANSFER
+  OPENING_BALANCE
+  CLOSING_BALANCE
+}
+
+enum AccountCategory {
+  CASH
+  BANK
+}
+
+enum NotificationType {
+  TRANSACTION_CREATED
+  TRANSACTION_UPDATED
+  SYNC_COMPLETED
+  SYNC_FAILED
+  LOW_STOCK_ALERT
+  PAYMENT_DUE
+  SYSTEM_UPDATE
+}
+
+enum SyncType {
+  MANUAL
+  AUTOMATIC
+  SCHEDULED
+}
+
+enum SyncStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+// ============================================================================
+// MODELS
+// ============================================================================
+
+model Shop {
+  id        String   @id @default(uuid()) @db.Uuid
+  nameAr    String
+  nameEn    String
+  code      String   @unique
+  ownerId   String   @db.Uuid
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationships
+  users           User[]
+  accounts        Account[]
+  transactions    Transaction[]
+  financialYears  FinancialYear[]
+  notifications   Notification[]
+  syncLogs        SyncLog[]
+  cashAccounts    CashAccount[]
+  bankAccounts    BankAccount[]
+  expenseCategories ExpenseCategory[]
+  categoryAccountAssignments CategoryAccountAssignment[]
+
+  @@map("shops")
+  @@index([ownerId])
+  @@index([isActive])
+}
+
+model User {
+  id          String    @id @default(uuid()) @db.Uuid
+  email       String    @unique
+  name        String
+  hashedPassword String?
+  role        UserRole  @default(USER)
+  shopId      String    @db.Uuid
+  isActive    Boolean   @default(true)
+  lastSyncAt  DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Relationships
+  shop                  Shop            @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  debitTransactions     Transaction[]   @relation("DebitUser")
+  creditTransactions    Transaction[]   @relation("CreditUser")
+  notifications         Notification[]  @relation("UserNotifications")
+
+  @@map("users")
+  @@index([shopId])
+  @@index([email])
+  @@index([lastSyncAt])
+  @@index([role])
+}
+
+model Account {
+  id              String      @id @default(uuid()) @db.Uuid
+  code            String
+  nameAr          String
+  nameEn          String
+  accountType     AccountType
+  level           Int         @default(0)
+  parentId        String?     @db.Uuid
+  shopId          String      @db.Uuid
+  isActive        Boolean     @default(true)
+  isSystemAccount Boolean     @default(false)
+  balance         Decimal     @default(0.00) @db.Decimal(15, 2)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  // Relationships
+  shop              Shop          @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  parent            Account?      @relation("AccountHierarchy", fields: [parentId], references: [id])
+  children          Account[]     @relation("AccountHierarchy")
+  debitTransactions Transaction[] @relation("DebitAccount")
+  creditTransactions Transaction[] @relation("CreditAccount")
+  categoryAssignments CategoryAccountAssignment[]
+
+  @@map("accounts")
+  @@unique([shopId, code])
+  @@index([shopId])
+  @@index([accountType])
+  @@index([parentId])
+  @@index([level])
+}
+
+model Transaction {
+  id              String          @id @default(uuid()) @db.Uuid
+  transactionType TransactionType
+  amount          Decimal         @db.Decimal(15, 2)
+  amountPaid      Decimal?        @db.Decimal(15, 2)
+  change          Decimal?        @db.Decimal(15, 2)
+  description     String?
+  notes           String?
+  transactionDate DateTime
+  debitAccountId  String          @db.Uuid
+  creditAccountId String          @db.Uuid
+  debitUserId     String          @db.Uuid
+  creditUserId    String          @db.Uuid
+  shopId          String          @db.Uuid
+  financialYearId String          @db.Uuid
+  isSynced        Boolean         @default(false)
+  syncedAt        DateTime?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  // Relationships
+  shop          Shop          @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  debitAccount  Account       @relation("DebitAccount", fields: [debitAccountId], references: [id])
+  creditAccount Account       @relation("CreditAccount", fields: [creditAccountId], references: [id])
+  debitUser     User          @relation("DebitUser", fields: [debitUserId], references: [id])
+  creditUser    User          @relation("CreditUser", fields: [creditUserId], references: [id])
+  financialYear FinancialYear @relation(fields: [financialYearId], references: [id])
+
+  @@map("transactions")
+  @@index([shopId])
+  @@index([shopId, transactionDate])
+  @@index([debitAccountId])
+  @@index([creditAccountId])
+  @@index([transactionType])
+  @@index([isSynced])
+  @@index([financialYearId])
+}
+
+model FinancialYear {
+  id                String        @id @default(uuid()) @db.Uuid
+  name              String
+  startDate         DateTime
+  endDate           DateTime
+  openingStockValue Decimal       @default(0.00) @db.Decimal(15, 2)
+  closingStockValue Decimal?      @db.Decimal(15, 2)
+  isCurrent         Boolean       @default(false)
+  isClosed          Boolean       @default(false)
+  shopId            String        @db.Uuid
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  // Relationships
+  shop              Shop                @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  transactions      Transaction[]
+  stockValueHistory StockValueHistory[]
+
+  @@map("financial_years")
+  @@unique([shopId, isCurrent])
+  @@index([shopId])
+  @@index([isCurrent])
+  @@index([isClosed])
+}
+
+model StockValueHistory {
+  id               String    @id @default(uuid()) @db.Uuid
+  financialYearId  String    @db.Uuid
+  fieldChanged     String    // 'openingStockValue' or 'closingStockValue'
+  oldValue         Decimal?  @db.Decimal(15, 2)
+  newValue         Decimal   @db.Decimal(15, 2)
+  changedAt        DateTime  @default(now())
+  reason           String?
+  createdAt        DateTime  @default(now())
+
+  // Relationships
+  financialYear FinancialYear @relation(fields: [financialYearId], references: [id], onDelete: Cascade)
+
+  @@map("stock_value_history")
+  @@index([financialYearId])
+  @@index([changedAt])
+  @@index([fieldChanged])
+}
+
+model Notification {
+  id                String           @id @default(uuid()) @db.Uuid
+  titleAr           String
+  titleEn           String
+  messageAr         String
+  messageEn         String
+  notificationType  NotificationType
+  priority          Int              @default(1) // 1=Low, 2=Medium, 3=High, 4=Critical
+  isRead            Boolean          @default(false)
+  isEmailSent       Boolean          @default(false)
+  isPushSent        Boolean          @default(false)
+  isSMSSent         Boolean          @default(false)
+  userId            String           @db.Uuid
+  shopId            String           @db.Uuid
+  relatedEntityId   String?          @db.Uuid // For linking to transactions, accounts, etc.
+  scheduledFor      DateTime?
+  sentAt            DateTime?
+  readAt            DateTime?
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+
+  // Relationships
+  shop Shop @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  user User @relation("UserNotifications", fields: [userId], references: [id])
+
+  @@map("notifications")
+  @@index([shopId])
+  @@index([userId, isRead])
+  @@index([notificationType])
+  @@index([priority])
+  @@index([scheduledFor])
+}
+
+model SyncLog {
+  id                 String     @id @default(uuid()) @db.Uuid
+  syncType           SyncType
+  syncStatus         SyncStatus @default(PENDING)
+  recordsProcessed   Int        @default(0)
+  conflictsResolved  Int        @default(0)
+  errorCount         Int        @default(0)
+  duration           Int?       // Duration in milliseconds
+  errorDetails       String?    // JSON string for error details
+  metadata           String?    // JSON string for additional metadata
+  shopId             String     @db.Uuid
+  startedAt          DateTime   @default(now())
+  completedAt        DateTime?
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
+
+  // Relationships
+  shop Shop @relation(fields: [shopId], references: [id], onDelete: Cascade)
+
+  @@map("sync_logs")
+  @@index([shopId])
+  @@index([syncType])
+  @@index([syncStatus])
+  @@index([startedAt])
+  @@index([completedAt])
+}
+
+model CashAccount {
+  id             String    @id @default(uuid()) @db.Uuid
+  nameAr         String
+  nameEn         String
+  shopId         String    @db.Uuid
+  openingBalance Decimal   @db.Decimal(15, 2)
+  currentBalance Decimal   @db.Decimal(15, 2)
+  isActive       Boolean   @default(true)
+  isDefault      Boolean   @default(false)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  // Relationships
+  shop           Shop      @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  balanceHistory BalanceHistory[]
+
+  @@map("cash_accounts")
+  @@unique([shopId, isDefault])
+  @@index([shopId])
+}
+
+model BankAccount {
+  id             String    @id @default(uuid()) @db.Uuid
+  nameAr         String
+  nameEn         String
+  accountNumber  String
+  bankName       String
+  iban           String?
+  shopId         String    @db.Uuid
+  openingBalance Decimal   @db.Decimal(15, 2)
+  currentBalance Decimal   @db.Decimal(15, 2)
+  isActive       Boolean   @default(true)
+  isDefault      Boolean   @default(false)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  // Relationships
+  shop           Shop      @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  balanceHistory BalanceHistory[]
+
+  @@map("bank_accounts")
+  @@unique([shopId, isDefault])
+  @@index([shopId])
+}
+
+model BalanceHistory {
+  id             String           @id @default(uuid()) @db.Uuid
+  accountType    AccountCategory
+  accountId      String           @db.Uuid
+  previousBalance Decimal         @db.Decimal(15, 2)
+  newBalance     Decimal          @db.Decimal(15, 2)
+  changeAmount   Decimal          @db.Decimal(15, 2)
+  changeReason   String
+  userId         String           @db.Uuid
+  shopId         String           @db.Uuid
+  createdAt      DateTime         @default(now())
+
+  // Relationships - dynamic reference based on accountType
+  cashAccount    CashAccount?     @relation(fields: [accountId], references: [id], onDelete: Cascade, map: "fk_cash_account")
+  bankAccount    BankAccount?     @relation(fields: [accountId], references: [id], onDelete: Cascade, map: "fk_bank_account")
+
+  @@map("balance_history")
+  @@index([accountType])
+  @@index([accountId])
+  @@index([shopId])
+  @@index([createdAt])
+}
+
+model ExpenseCategory {
+  id               String    @id @default(uuid()) @db.Uuid
+  nameAr           String
+  nameEn           String
+  code             String
+  parentId         String?   @db.Uuid
+  level            Int       @default(1)
+  shopId           String    @db.Uuid
+  isActive         Boolean   @default(true)
+  isSystemCategory Boolean   @default(false)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  // Relationships
+  shop             Shop      @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  parent           ExpenseCategory? @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children         ExpenseCategory[] @relation("CategoryHierarchy")
+  accountAssignments CategoryAccountAssignment[]
+
+  @@map("expense_categories")
+  @@unique([shopId, code])
+  @@index([shopId])
+  @@index([parentId])
+  @@index([level])
+  @@index([isActive])
+}
+
+model CategoryAccountAssignment {
+  id         String    @id @default(uuid()) @db.Uuid
+  categoryId String    @db.Uuid
+  accountId  String    @db.Uuid
+  shopId     String    @db.Uuid
+  createdAt  DateTime  @default(now())
+
+  // Relationships
+  category   ExpenseCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  account    Account         @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  shop       Shop            @relation(fields: [shopId], references: [id], onDelete: Cascade)
+
+  @@map("category_account_assignments")
+  @@unique([categoryId, accountId])
+  @@index([shopId])
+  @@index([categoryId])
+  @@index([accountId])
+}
+
+// ============================================================================
+// ROW-LEVEL SECURITY (RLS) POLICIES
+// ============================================================================
+// Note: RLS policies need to be implemented directly in PostgreSQL after migration
+// Example policies (to be created via SQL):
+//
+// ALTER TABLE users ENABLE ROW LEVEL SECURITY;
+// CREATE POLICY "Users can only access their own shop data" ON users
+//   FOR ALL USING (shop_id = current_setting('app.current_shop_id')::uuid);
+//
+// Similar policies need to be created for all tenant-specific tables:
+// accounts, transactions, financial_years, notifications, sync_logs

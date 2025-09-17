@@ -1,0 +1,25 @@
+{
+  "menu": {
+    "dashboard": "لوحة التحكم",
+    "inventory": "المخزون",
+    "sales": "المبيعات",
+    "purchases": "المشتريات",
+    "customers": "العملاء",
+    "suppliers": "الموردين",
+    "reports": "التقارير",
+    "settings": "الإعدادات",
+    "users": "المستخدمين",
+    "profile": "الملف الشخصي",
+    "logout": "تسجيل الخروج"
+  },
+  "breadcrumb": {
+    "home": "الرئيسية",
+    "dashboard": "لوحة التحكم"
+  },
+  "sections": {
+    "main": "القائمة الرئيسية",
+    "management": "الإدارة",
+    "reports": "التقارير والتحليلات",
+    "system": "النظام"
+  }
+}

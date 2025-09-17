@@ -1,0 +1,20 @@
+schema: 1
+story: '2.3'
+gate: CONCERNS
+status_reason: 'Implementation complete with mock data and turbo config issue needs attention.'
+reviewer: 'Quinn'
+updated: '2025-01-17T16:45:00Z'
+top_issues:
+  - id: 'ARCH-001'
+    severity: medium
+    finding: 'Using mock data instead of tRPC integration in main page component'
+    suggested_action: 'Replace mock data with actual tRPC queries before production'
+  - id: 'MNT-001'
+    severity: low
+    finding: 'Turbo.json uses deprecated "pipeline" field instead of "tasks"'
+    suggested_action: 'Update turbo.json to use "tasks" field as per Turborepo 2.0+'
+  - id: 'TEST-001'
+    severity: low
+    finding: 'Missing integration tests for tRPC API interactions'
+    suggested_action: 'Add integration tests for account management API calls'
+waiver: { active: false }

@@ -1,0 +1,25 @@
+{
+  "menu": {
+    "dashboard": "Dashboard",
+    "inventory": "Inventory",
+    "sales": "Sales",
+    "purchases": "Purchases",
+    "customers": "Customers",
+    "suppliers": "Suppliers",
+    "reports": "Reports",
+    "settings": "Settings",
+    "users": "Users",
+    "profile": "Profile",
+    "logout": "Logout"
+  },
+  "breadcrumb": {
+    "home": "Home",
+    "dashboard": "Dashboard"
+  },
+  "sections": {
+    "main": "Main Menu",
+    "management": "Management",
+    "reports": "Reports & Analytics",
+    "system": "System"
+  }
+}

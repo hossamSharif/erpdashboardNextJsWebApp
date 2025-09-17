@@ -1,0 +1,37 @@
+{
+  "name": "@multi-shop/mobile",
+  "version": "0.1.0",
+  "private": true,
+  "main": "expo-router/entry",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "build": "echo 'Mobile build configuration coming in future stories'",
+    "lint": "eslint src/",
+    "test": "vitest",
+    "clean": "rm -rf .expo dist node_modules/.cache"
+  },
+  "dependencies": {
+    "expo": "~49.0.0",
+    "expo-router": "^2.0.0",
+    "expo-status-bar": "~1.6.0",
+    "react": "18.2.0",
+    "react-native": "0.72.6",
+    "@trpc/client": "^10.45.0",
+    "@trpc/react-query": "^10.45.0",
+    "@tanstack/react-query": "^4.36.0",
+    "@multi-shop/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/react": "~18.2.14",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.44.0",
+    "typescript": "^5.1.3",
+    "vitest": "^2.1.8",
+    "@testing-library/react-native": "^12.4.0",
+    "@testing-library/jest-native": "^5.4.3"
+  }
+}
