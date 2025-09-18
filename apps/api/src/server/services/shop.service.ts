@@ -233,4 +233,98 @@ export class ShopService {
       });
     }
   }
+
+  static async getDashboardData(shopId: string, date: Date = new Date()) {
+    // Set date range for the selected day
+    const startOfDay = new Date(date);
+    startOfDay.setHours(0, 0, 0, 0);
+
+    const endOfDay = new Date(date);
+    endOfDay.setHours(23, 59, 59, 999);
+
+    // Get cash and bank balances
+    const [cashAccounts, bankAccounts] = await Promise.all([
+      prisma.cashAccount.findMany({
+        where: { shopId, isActive: true },
+        select: { balance: true }
+      }),
+      prisma.bankAccount.findMany({
+        where: { shopId, isActive: true },
+        select: { balance: true }
+      })
+    ]);
+
+    const cashBalance = cashAccounts.reduce((sum, acc) => sum + parseFloat(acc.balance.toString()), 0);
+    const bankBalance = bankAccounts.reduce((sum, acc) => sum + parseFloat(acc.balance.toString()), 0);
+
+    // Get today's transactions stats
+    const todayTransactions = await prisma.transaction.findMany({
+      where: {
+        shopId,
+        transactionDate: {
+          gte: startOfDay,
+          lte: endOfDay
+        }
+      },
+      select: {
+        transactionType: true,
+        amount: true
+      }
+    });
+
+    // Calculate stats by transaction type
+    let sales = 0;
+    let purchases = 0;
+    let expenses = 0;
+
+    todayTransactions.forEach(transaction => {
+      const amount = parseFloat(transaction.amount.toString());
+
+      switch (transaction.transactionType) {
+        case 'SALE':
+          sales += amount;
+          break;
+        case 'PURCHASE':
+          purchases += amount;
+          break;
+        case 'PAYMENT':
+          expenses += amount;
+          break;
+      }
+    });
+
+    const netCashFlow = sales - purchases - expenses;
+
+    // Get pending sync count
+    const pendingSyncCount = await prisma.transaction.count({
+      where: {
+        shopId,
+        isSynced: false
+      }
+    });
+
+    // Get last sync time
+    const lastSync = await prisma.transaction.findFirst({
+      where: {
+        shopId,
+        isSynced: true,
+        syncedAt: { not: null }
+      },
+      orderBy: { syncedAt: 'desc' },
+      select: { syncedAt: true }
+    });
+
+    return {
+      cashBalance,
+      bankBalance,
+      todayStats: {
+        sales,
+        purchases,
+        expenses,
+        netCashFlow
+      },
+      pendingSyncCount,
+      lastSyncAt: lastSync?.syncedAt || null
+    };
+  }
 }

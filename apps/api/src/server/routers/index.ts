@@ -6,6 +6,7 @@ import { financialYearRouter } from './financialYear';
 import { profitRouter } from './profit';
 import { cashBankRouter } from './cash-bank';
 import { expenseCategoryRouter } from './expense-category';
+import { transactionRouter } from './transaction';
 
 export const appRouter = router({
   auth: authRouter,
@@ -15,6 +16,7 @@ export const appRouter = router({
   profit: profitRouter,
   cashBank: cashBankRouter,
   expenseCategory: expenseCategoryRouter,
+  transaction: transactionRouter,
 });
 
 export type AppRouter = typeof appRouter;

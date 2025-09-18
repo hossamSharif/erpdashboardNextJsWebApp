@@ -235,5 +235,43 @@ export const shopRouter = router({
           cause: error
         });
       }
+    }),
+
+  getDashboard: protectedProcedure
+    .input(z.object({
+      shopId: z.string().uuid(),
+      date: z.date().optional()
+    }))
+    .query(async ({ input, ctx }) => {
+      try {
+        const { shopId, date = new Date() } = input;
+
+        // For regular users, check if they have access to this shop
+        if (ctx.user.role === UserRole.USER && ctx.user.shopId !== shopId) {
+          throw new TRPCError({
+            code: 'FORBIDDEN',
+            message: 'Access denied to this shop'
+          });
+        }
+
+        // For admins, validate ownership
+        if (ctx.user.role === UserRole.ADMIN) {
+          await ShopService.validateShopOwnership(shopId, ctx.user.id);
+        }
+
+        const result = await ShopService.getDashboardData(shopId, date);
+
+        return result;
+      } catch (error) {
+        if (error instanceof TRPCError) {
+          throw error;
+        }
+
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Failed to fetch dashboard data',
+          cause: error
+        });
+      }
     })
 });
