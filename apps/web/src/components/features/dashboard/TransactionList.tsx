@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useAuthStore } from '../../../stores/auth-store';
 import { useDashboardStore } from '../../../stores/dashboard-store';
@@ -9,12 +10,15 @@ import { format } from 'date-fns';
 import { ar, enUS } from 'date-fns/locale';
 import { TransactionActions } from './TransactionActions';
 import { EmptyState } from './EmptyState';
+import { TransactionEntryModal } from '../transactions/TransactionEntryModal';
 
 export function TransactionList() {
   const { data: session } = useSession();
   const { language } = useAuthStore();
   const { selectedDate } = useDashboardStore();
   const isRTL = language === 'ar';
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { data: transactions, isLoading, refetch } = trpc.transaction.getDaily.useQuery(
     {
@@ -158,7 +162,16 @@ export function TransactionList() {
   }
 
   if (!transactions || transactions.length === 0) {
-    return <EmptyState />;
+    return (
+      <>
+        <EmptyState onAddTransaction={() => setIsModalOpen(true)} />
+        <TransactionEntryModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          onSuccess={() => refetch()}
+        />
+      </>
+    );
   }
 
   return (
@@ -172,6 +185,21 @@ export function TransactionList() {
             <span className="text-sm text-gray-500 dark:text-gray-400">
               {isRTL ? `${transactions.length} معاملة` : `${transactions.length} transactions`}
             </span>
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+              title={isRTL ? 'إضافة معاملة' : 'Add Transaction'}
+            >
+              <svg className={`h-4 w-4 ${isRTL ? 'ml-1' : 'mr-1'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 4v16m8-8H4"
+                />
+              </svg>
+              {isRTL ? 'إضافة' : 'Add'}
+            </button>
             <button
               onClick={() => refetch()}
               className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
@@ -249,6 +277,12 @@ export function TransactionList() {
           );
         })}
       </div>
+
+      <TransactionEntryModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSuccess={() => refetch()}
+      />
     </div>
   );
 }

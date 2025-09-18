@@ -1,18 +1,18 @@
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
 import { router, protectedProcedure } from '../trpc';
-import { UserRole, createTransactionSchema, salesTransactionFormSchema } from '@multi-shop/shared';
-import { TransactionService } from '../services/transaction.service';
+import { UserRole } from '@multi-shop/shared';
+import { AccountService } from '../services/account.service';
 
-export const transactionRouter = router({
-  getDaily: protectedProcedure
+export const accountsRouter = router({
+  getCustomers: protectedProcedure
     .input(z.object({
       shopId: z.string().uuid(),
-      date: z.date()
+      searchTerm: z.string().optional()
     }))
     .query(async ({ input, ctx }) => {
       try {
-        const { shopId, date } = input;
+        const { shopId, searchTerm } = input;
 
         // For regular users, check if they have access to this shop
         if (ctx.user.role === UserRole.USER && ctx.user.shopId !== shopId) {
@@ -22,9 +22,9 @@ export const transactionRouter = router({
           });
         }
 
-        const transactions = await TransactionService.getDailyTransactions(shopId, date);
+        const customers = await AccountService.getCustomers(shopId, searchTerm);
 
-        return transactions;
+        return customers;
       } catch (error) {
         if (error instanceof TRPCError) {
           throw error;
@@ -32,20 +32,19 @@ export const transactionRouter = router({
 
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
-          message: 'Failed to fetch daily transactions',
+          message: 'Failed to fetch customers',
           cause: error
         });
       }
     }),
 
-  delete: protectedProcedure
+  getCashBankAccounts: protectedProcedure
     .input(z.object({
-      id: z.string().uuid(),
       shopId: z.string().uuid()
     }))
-    .mutation(async ({ input, ctx }) => {
+    .query(async ({ input, ctx }) => {
       try {
-        const { id, shopId } = input;
+        const { shopId } = input;
 
         // For regular users, check if they have access to this shop
         if (ctx.user.role === UserRole.USER && ctx.user.shopId !== shopId) {
@@ -55,12 +54,9 @@ export const transactionRouter = router({
           });
         }
 
-        const result = await TransactionService.deleteTransaction(id, shopId);
+        const accounts = await AccountService.getCashBankAccounts(shopId);
 
-        return {
-          success: true,
-          message: 'Transaction deleted successfully'
-        };
+        return accounts;
       } catch (error) {
         if (error instanceof TRPCError) {
           throw error;
@@ -68,19 +64,22 @@ export const transactionRouter = router({
 
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
-          message: 'Failed to delete transaction',
+          message: 'Failed to fetch cash/bank accounts',
           cause: error
         });
       }
     }),
 
-  create: protectedProcedure
-    .input(createTransactionSchema.extend({
-      shopId: z.string().uuid()
+  createCustomer: protectedProcedure
+    .input(z.object({
+      shopId: z.string().uuid(),
+      nameAr: z.string().min(1, 'Arabic name is required'),
+      nameEn: z.string().min(1, 'English name is required'),
+      code: z.string().optional()
     }))
     .mutation(async ({ input, ctx }) => {
       try {
-        const { shopId, ...transactionData } = input;
+        const { shopId, ...customerData } = input;
 
         // For regular users, check if they have access to this shop
         if (ctx.user.role === UserRole.USER && ctx.user.shopId !== shopId) {
@@ -90,13 +89,12 @@ export const transactionRouter = router({
           });
         }
 
-        const transaction = await TransactionService.createTransaction({
-          ...transactionData,
-          shopId,
-          userId: ctx.user.id
+        const customer = await AccountService.createCustomer({
+          ...customerData,
+          shopId
         });
 
-        return transaction;
+        return customer;
       } catch (error) {
         if (error instanceof TRPCError) {
           throw error;
@@ -104,7 +102,7 @@ export const transactionRouter = router({
 
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
-          message: 'Failed to create transaction',
+          message: 'Failed to create customer',
           cause: error
         });
       }
