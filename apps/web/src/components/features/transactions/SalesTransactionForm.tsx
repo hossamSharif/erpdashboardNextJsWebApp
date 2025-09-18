@@ -39,6 +39,7 @@ export function SalesTransactionForm({
   const isRTL = language === 'ar';
 
   const [customers, setCustomers] = useState<Customer[]>([]);
+  const [cashBankAccounts, setCashBankAccounts] = useState<any[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
@@ -97,6 +98,17 @@ export function SalesTransactionForm({
     }
   );
 
+  // Load cash/bank accounts
+  const { data: cashBankData } = trpc.accounts.getCashBankAccounts.useQuery(
+    { shopId: session?.user?.shopId || '' },
+    {
+      enabled: !!session?.user?.shopId,
+      onSuccess: (data) => {
+        setCashBankAccounts(data);
+      }
+    }
+  );
+
   // Create transaction mutation
   const createTransactionMutation = trpc.transactions.create.useMutation({
     onSuccess: () => {
@@ -115,8 +127,23 @@ export function SalesTransactionForm({
 
     setIsSubmitting(true);
 
-    // Find the selected customer to get counter account
-    const selectedCustomer = customers.find(c => c.id === data.customerId);
+    // Find appropriate cash/bank account based on payment method
+    const counterAccount = cashBankAccounts.find(account => {
+      const nameEn = account.nameEn.toLowerCase();
+      const nameAr = account.nameAr.toLowerCase();
+
+      if (data.paymentMethod === PaymentMethod.CASH) {
+        return nameEn.includes('cash') || nameAr.includes('نقدية');
+      } else {
+        return nameEn.includes('bank') || nameAr.includes('بنك');
+      }
+    });
+
+    if (!counterAccount) {
+      console.error(`No ${data.paymentMethod.toLowerCase()} account found`);
+      setIsSubmitting(false);
+      return;
+    }
 
     createTransactionMutation.mutate({
       transactionType: TransactionType.SALE,
@@ -125,10 +152,7 @@ export function SalesTransactionForm({
       change: data.change,
       description: data.invoiceComment || `Sales transaction ${new Date().toLocaleDateString()}`,
       accountId: data.customerId,
-      // For now, use a placeholder counter account - this should come from cash/bank accounts
-      counterAccountId: data.paymentMethod === PaymentMethod.CASH
-        ? 'cash-account-id' // TODO: Get actual cash account ID
-        : 'bank-account-id', // TODO: Get actual bank account ID
+      counterAccountId: counterAccount.id,
       paymentMethod: data.paymentMethod,
       shopId: session.user.shopId
     });
