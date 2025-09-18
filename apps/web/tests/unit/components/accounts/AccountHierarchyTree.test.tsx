@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { AccountHierarchyTree } from '@/components/features/accounts/AccountHierarchyTree';
-import type { AccountTreeNode } from '@erpdesk/shared';
+import type { AccountTreeNode } from '@multi-shop/shared';
 
 const mockAccounts: AccountTreeNode[] = [
   {

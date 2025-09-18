@@ -15,7 +15,7 @@ import {
   Unlock,
   Users
 } from 'lucide-react';
-import type { FinancialYearWithCounts } from '@erpdesk/shared';
+import type { FinancialYearWithCounts } from '@multi-shop/shared';
 
 import { Button } from '@/components/ui/button';
 import {

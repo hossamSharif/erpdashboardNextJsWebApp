@@ -26,7 +26,7 @@ import type {
   AccountSearchFilters,
   AccountCreateInput,
   AccountUpdateInput,
-} from '@erpdesk/shared';
+} from '@multi-shop/shared';
 
 // Mock data for demonstration - replace with actual tRPC calls
 const mockAccounts: AccountTreeNode[] = [

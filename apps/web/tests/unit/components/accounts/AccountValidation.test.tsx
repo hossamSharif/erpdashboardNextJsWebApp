@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { AccountValidation, useAccountValidation } from '@/components/features/accounts/AccountValidation';
 import { renderHook } from '@testing-library/react';
-import type { Account } from '@erpdesk/shared';
+import type { Account } from '@multi-shop/shared';
 
 const mockAccounts: Account[] = [
   {

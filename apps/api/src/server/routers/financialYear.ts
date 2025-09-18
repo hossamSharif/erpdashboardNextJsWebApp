@@ -9,7 +9,7 @@ import {
   updateOpeningStockValueSchema,
   updateClosingStockValueSchema,
   bulkUpdateStockValuesSchema
-} from '@erpdesk/shared';
+} from '@multi-shop/shared';
 import { FinancialYearService } from '../services/financialYear.service';
 import { TRPCError } from '@trpc/server';
 

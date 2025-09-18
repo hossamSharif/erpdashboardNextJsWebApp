@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { TRPCError } from '@trpc/server';
 import { FinancialYearService } from '../../../src/server/services/financialYear.service';
 import type { PrismaClient } from '@prisma/client';
-import type { CreateFinancialYearInput, UpdateFinancialYearInput } from '@erpdesk/shared';
+import type { CreateFinancialYearInput, UpdateFinancialYearInput } from '@multi-shop/shared';
 
 // Mock Prisma client
 const mockPrisma = {

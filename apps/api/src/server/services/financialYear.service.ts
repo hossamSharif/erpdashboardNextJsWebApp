@@ -8,7 +8,7 @@ import type {
   BulkUpdateStockValuesInput,
   FinancialYear,
   FinancialYearWithCounts
-} from '@erpdesk/shared';
+} from '@multi-shop/shared';
 import { TRPCError } from '@trpc/server';
 import { ProfitCalculationService } from './profit-calculation.service';
 

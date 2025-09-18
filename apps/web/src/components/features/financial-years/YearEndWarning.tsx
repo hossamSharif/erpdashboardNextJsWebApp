@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { format, differenceInDays } from 'date-fns';
 import { ar } from 'date-fns/locale';
 import { AlertTriangle, Calendar, Clock, X } from 'lucide-react';
-import type { FinancialYear } from '@erpdesk/shared';
+import type { FinancialYear } from '@multi-shop/shared';
 
 import {
   Alert,

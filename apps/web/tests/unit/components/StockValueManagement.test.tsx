@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import type { FinancialYearWithCounts } from '@erpdesk/shared';
+import type { FinancialYearWithCounts } from '@multi-shop/shared';
 
 import { StockValueManagement } from '../../../src/components/features/financial-years/StockValueManagement';
 

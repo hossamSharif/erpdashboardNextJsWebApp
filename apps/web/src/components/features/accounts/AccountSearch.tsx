@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback, useMemo } from 'react';
 import { Search, X, Filter, SortAsc, SortDesc } from 'lucide-react';
-import type { AccountSearchFilters, AccountType } from '@erpdesk/shared';
+import type { AccountSearchFilters, AccountType } from '@multi-shop/shared';
 
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';

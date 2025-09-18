@@ -20,7 +20,7 @@ import {
 } from '@/components/ui/dialog';
 
 import { trpc } from '@/lib/trpc';
-import type { FinancialYearWithCounts } from '@erpdesk/shared';
+import type { FinancialYearWithCounts } from '@multi-shop/shared';
 
 const bulkUpdateSchema = z.object({
   updates: z.array(z.object({

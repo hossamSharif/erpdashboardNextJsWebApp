@@ -3,7 +3,7 @@
 import { format } from 'date-fns';
 import { ar } from 'date-fns/locale';
 import { CalendarDays, DollarSign, Lock, Star, TrendingUp, Users } from 'lucide-react';
-import type { FinancialYearWithCounts } from '@erpdesk/shared';
+import type { FinancialYearWithCounts } from '@multi-shop/shared';
 
 import {
   Card,

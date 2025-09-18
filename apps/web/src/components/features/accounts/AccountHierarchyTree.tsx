@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { ChevronDown, ChevronRight, Building2, DollarSign, TrendingUp, Wallet, CreditCard } from 'lucide-react';
-import type { AccountTreeNode, AccountType } from '@erpdesk/shared';
+import type { AccountTreeNode, AccountType } from '@multi-shop/shared';
 
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';

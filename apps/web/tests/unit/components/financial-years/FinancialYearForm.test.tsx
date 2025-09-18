@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { FinancialYearForm } from '@/components/features/financial-years/FinancialYearForm';
-import type { CreateFinancialYearInput, FinancialYear } from '@erpdesk/shared';
+import type { CreateFinancialYearInput, FinancialYear } from '@multi-shop/shared';
 
 // Mock dependencies
 vi.mock('@/components/ui/date-picker', () => ({

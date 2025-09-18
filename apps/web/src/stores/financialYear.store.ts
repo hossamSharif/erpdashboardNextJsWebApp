@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
-import type { FinancialYear, FinancialYearWithCounts } from '@erpdesk/shared';
+import type { FinancialYear, FinancialYearWithCounts } from '@multi-shop/shared';
 
 interface FinancialYearState {
   // State

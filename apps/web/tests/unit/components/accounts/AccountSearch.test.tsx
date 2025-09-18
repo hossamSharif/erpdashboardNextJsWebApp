@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { AccountSearch } from '@/components/features/accounts/AccountSearch';
-import type { AccountSearchFilters } from '@erpdesk/shared';
+import type { AccountSearchFilters } from '@multi-shop/shared';
 
 describe('AccountSearch', () => {
   const mockOnSearch = vi.fn();

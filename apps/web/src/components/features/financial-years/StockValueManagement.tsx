@@ -21,7 +21,7 @@ import {
 } from '@/components/ui/dialog';
 
 import { trpc } from '@/lib/trpc';
-import type { FinancialYearWithCounts } from '@erpdesk/shared';
+import type { FinancialYearWithCounts } from '@multi-shop/shared';
 
 const stockValueSchema = z.object({
   openingStockValue: z.number().nonnegative('Opening stock value must be non-negative'),

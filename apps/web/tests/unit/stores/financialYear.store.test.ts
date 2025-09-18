@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { useFinancialYearStore } from '@/stores/financialYear.store';
-import type { FinancialYearWithCounts, FinancialYear } from '@erpdesk/shared';
+import type { FinancialYearWithCounts, FinancialYear } from '@multi-shop/shared';
 
 describe('FinancialYearStore', () => {
   beforeEach(() => {

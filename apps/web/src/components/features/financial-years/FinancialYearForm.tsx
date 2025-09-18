@@ -11,7 +11,7 @@ import {
   type CreateFinancialYearInput,
   type UpdateFinancialYearInput,
   type FinancialYear
-} from '@erpdesk/shared';
+} from '@multi-shop/shared';
 
 import { Button } from '@/components/ui/button';
 import {

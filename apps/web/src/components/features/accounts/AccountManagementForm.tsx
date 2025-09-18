@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { Save, X, AlertCircle, Building2, DollarSign, TrendingUp, Wallet, CreditCard } from 'lucide-react';
-import type { Account, AccountCreateInput, AccountUpdateInput, AccountType, AccountTreeNode } from '@erpdesk/shared';
+import type { Account, AccountCreateInput, AccountUpdateInput, AccountType, AccountTreeNode } from '@multi-shop/shared';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

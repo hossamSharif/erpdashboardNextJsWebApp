@@ -28,7 +28,7 @@ import type {
   CreateFinancialYearInput,
   UpdateFinancialYearInput,
   FinancialYearWithCounts
-} from '@erpdesk/shared';
+} from '@multi-shop/shared';
 
 export default function FinancialYearsPage() {
   const [formOpen, setFormOpen] = useState(false);

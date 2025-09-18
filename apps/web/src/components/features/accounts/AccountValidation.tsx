@@ -2,8 +2,8 @@
 
 import React, { useMemo } from 'react';
 import { AlertTriangle, CheckCircle, XCircle, Info } from 'lucide-react';
-import type { Account, AccountTreeNode } from '@erpdesk/shared';
-import { validateAccountHierarchy, validateAccountLevel } from '@erpdesk/shared';
+import type { Account, AccountTreeNode } from '@multi-shop/shared';
+import { validateAccountHierarchy, validateAccountLevel } from '@multi-shop/shared';
 
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
