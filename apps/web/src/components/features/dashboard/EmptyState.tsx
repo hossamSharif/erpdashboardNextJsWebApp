@@ -9,15 +9,14 @@ interface EmptyStateProps {
 
 export function EmptyState({ onAddTransaction }: EmptyStateProps) {
   const { language } = useAuthStore();
-  const { t } = useTranslation();
   const isRTL = language === 'ar';
 
   const handleAddClick = () => {
     if (onAddTransaction) {
       onAddTransaction();
     } else {
-      // TODO: Open add transaction modal
-      console.log('Add new transaction');
+      // TODO: Open add transaction modal - placeholder for future implementation
+      // console.log('Add new transaction');
     }
   };
 

@@ -10,7 +10,7 @@ interface TransactionActionsProps {
   transaction: {
     id: string;
     transactionType: string;
-    amount: any;
+    amount: number | string;
     description?: string | null;
   };
   onUpdate: () => void;
