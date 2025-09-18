@@ -31,10 +31,9 @@
       ]
     }
   ],
-  "env": {
-    "DATABASE_URL": "@database_url",
-    "DIRECT_URL": "@direct_url",
-    "NEXTAUTH_SECRET": "@nextauth_secret",
-    "NEXTAUTH_URL": "@nextauth_url"
+  "functions": {
+    "apps/web/pages/api/**/*.js": {
+      "maxDuration": 10
+    }
   }
 }
